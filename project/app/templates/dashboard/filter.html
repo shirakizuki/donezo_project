@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="max-w-4xl mx-auto px-5 py-6">
+    <h1 class="text-2xl font-bold mb-5 text-center">Filters & Labels</h1>
+    
+    {% if messages %}
+    <div class="mb-5">
+        {% for message in messages %}
+        <div class="p-4 mb-2 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="flex flex-col md:flex-row gap-8 mt-5">
+        <!-- Priority Section -->
+        <div class="flex-1 border border-gray-200 rounded-lg bg-white h-[400px] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-100">
+                <h3 class="text-lg font-semibold">Priority</h3>
+                <span class="text-sm text-gray-500">Available: {{ priorities|length }}/5</span>
+                <button type="button" 
+                    class="{% if priorities|length >= 5 %}bg-gray-400 cursor-not-allowed{% else %}bg-[#ff9b44] hover:bg-[#ff8d2e]{% endif %} text-white px-2 py-0.5 rounded" 
+                    id="addPriorityBtn"
+                    {% if priorities|length >= 5 %}disabled{% endif %}>+</button>
+            </div>
+            
+            <div class="priority-list overflow-y-auto flex-grow" id="priorityList">
+                {% if priorities %}
+                    {% for priority in priorities %}
+                    <div class="flex items-center p-4 border-b border-gray-100" data-id="{{ priority.id }}">
+                        <span class="mr-3 text-[#ff9b44]">★</span>
+                        <span class="priority-name">{{ priority.name }}</span>
+                        <div class="ml-auto flex gap-4">
+                            <button class="edit-priority" data-id="{{ priority.id }}" data-name="{{ priority.name }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-gray-500 hover:text-gray-700" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                </svg>
+                            </button>
+                            <a href="{% url 'delete_priority' user.id priority.id %}" onclick="return confirm('Are you sure you want to delete this priority?')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-gray-500 hover:text-gray-700" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-gray-500 text-center py-6">No priorities added yet</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Labels Section -->
+        <div class="flex-1 border border-gray-200 rounded-lg bg-white h-[400px] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-100">
+                <h3 class="text-lg font-semibold">Labels</h3>
+                <button type="button" class="bg-[#ff9b44] hover:bg-[#ff8d2e] text-white px-2 py-0.5 rounded" id="addLabelBtn">+</button>
+            </div>
+            
+            <div class="labels-list overflow-y-auto flex-grow" id="labelList">
+                {% if labels %}
+                    {% for label in labels %}
+                    <div class="flex items-center p-4 border-b border-gray-100" data-id="{{ label.id }}">
+                        <span class="mr-3 text-[#ff9b44]">★</span>
+                        <span class="label-name">{{ label.name }}</span>
+                        <div class="ml-auto flex gap-4">
+                            <button class="edit-label" data-id="{{ label.id }}" data-name="{{ label.name }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-gray-500 hover:text-gray-700" viewBox="0 0 16 16">
+                                    <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                                </svg>
+                            </button>
+                            <a href="{% url 'delete_label' user.id label.id %}" onclick="return confirm('Are you sure you want to delete this label?')">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="text-gray-500 hover:text-gray-700" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-gray-500 text-center py-6">No labels added yet</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for priorities (add/edit) -->
+    <div id="priorityModal" class="fixed inset-0 bg-gray-500/50 bg-opacity-50 z-40 hidden">
+        <div class="bg-white w-full max-w-md mx-auto mt-[10%] rounded-lg shadow-lg relative">
+            <h2 class="text-xl font-semibold px-6 py-4 border-b" id="priorityModalTitle">Add Priority</h2>
+            <span id="closePriorityModal" class="absolute top-4 right-6 text-xl font-bold cursor-pointer">X</span>
+            
+            <div class="px-6 py-4">
+                <form method="post" id="priorityForm">
+                    <div class="mb-4">
+                        <label for="priorityName" class="block font-semibold mb-1">Name</label>
+                        <input type="text" id="priorityName" name="priority_name" class="w-full px-3 py-2 border border-gray-300 rounded" required>
+                    </div>
+                    
+                    <div class="flex justify-end gap-3 mt-5">
+                        <button type="button" id="cancelPriorityBtn" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 rounded">Cancel</button>
+                        <button type="submit" class="px-5 py-2 bg-[#ff9b44] hover:bg-[#ff8d2e] text-white rounded">Save</button>
+                    </div>
+                    {% csrf_token %}
+                    <input type="hidden" name="add_priority" value="1" id="priorityAction">
+                    <input type="hidden" name="priority_id" value="" id="priorityId">
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal for labels (add/edit) -->
+    <div id="labelModal" class="fixed inset-0 bg-gray-500/50 bg-opacity-50 z-40 hidden">
+        <div class="bg-white w-full max-w-md mx-auto mt-[10%] rounded-lg shadow-lg relative">
+            <h2 class="text-xl font-semibold px-6 py-4 border-b" id="labelModalTitle">Add Label</h2>
+            <span id="closeLabelModal" class="absolute top-4 right-6 text-xl font-bold cursor-pointer">X</span>
+            
+            <div class="px-6 py-4">
+                <form method="post" id="labelForm">
+                    <div class="mb-4">
+                        <label for="labelName" class="block font-semibold mb-1">Name</label>
+                        <input type="text" id="labelName" name="label_name" class="w-full px-3 py-2 border border-gray-300 rounded" required>
+                    </div>
+                    
+                    <div class="flex justify-end gap-3 mt-5">
+                        <button type="button" id="cancelLabelBtn" class="px-5 py-2 bg-gray-200 hover:bg-gray-300 rounded">Cancel</button>
+                        <button type="submit" class="px-5 py-2 bg-[#ff9b44] hover:bg-[#ff8d2e] text-white rounded">Save</button>
+                    </div>
+                    {% csrf_token %}
+                    <input type="hidden" name="add_label" value="1" id="labelAction">
+                    <input type="hidden" name="label_id" value="" id="labelId">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for modal functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get the modals
+        const priorityModal = document.getElementById('priorityModal');
+        const labelModal = document.getElementById('labelModal');
+        
+        // Get the forms
+        const priorityForm = document.getElementById('priorityForm');
+        const labelForm = document.getElementById('labelForm');
+        
+        // Get the modal titles
+        const priorityModalTitle = document.getElementById('priorityModalTitle');
+        const labelModalTitle = document.getElementById('labelModalTitle');
+        
+        // Get the buttons that open the modals for adding
+        const addPriorityBtn = document.getElementById('addPriorityBtn');
+        const addLabelBtn = document.getElementById('addLabelBtn');
+        
+        // Get the action and ID inputs
+        const priorityAction = document.getElementById('priorityAction');
+        const priorityId = document.getElementById('priorityId');
+        const labelAction = document.getElementById('labelAction');
+        const labelId = document.getElementById('labelId');
+        
+        // Get the elements that close the modals
+        const closePriorityModal = document.getElementById('closePriorityModal');
+        const closeLabelModal = document.getElementById('closeLabelModal');
+        const cancelPriorityBtn = document.getElementById('cancelPriorityBtn');
+        const cancelLabelBtn = document.getElementById('cancelLabelBtn');
+        
+        // Get the edit buttons
+        const editPriorityBtns = document.querySelectorAll('.edit-priority');
+        const editLabelBtns = document.querySelectorAll('.edit-label');
+        
+        // Get the input fields
+        const priorityNameInput = document.getElementById('priorityName');
+        const labelNameInput = document.getElementById('labelName');
+        
+        // Function to set up for adding a new priority
+        function setupAddPriority() {
+            priorityModalTitle.textContent = 'Add Priority';
+            priorityNameInput.value = '';
+            priorityAction.name = 'add_priority';
+            priorityId.value = '';
+            priorityForm.action = "{% url 'add_priority' user.id %}";
+            priorityModal.classList.remove('hidden');
+        }
+        
+        // Function to set up for adding a new label
+        function setupAddLabel() {
+            labelModalTitle.textContent = 'Add Label';
+            labelNameInput.value = '';
+            labelAction.name = 'add_label';
+            labelId.value = '';
+            labelForm.action = "{% url 'add_label' user.id %}";
+            labelModal.classList.remove('hidden');
+        }
+        
+        // Function to set up for editing a priority
+        function setupEditPriority(id, name) {
+            priorityModalTitle.textContent = 'Edit Priority';
+            priorityNameInput.value = name;
+            priorityAction.name = 'edit_priority';
+            priorityId.value = id;
+            priorityForm.action = "{% url 'edit_priority' user.id 0 %}".replace('0', id);
+            priorityModal.classList.remove('hidden');
+        }
+        
+        // Function to set up for editing a label
+        function setupEditLabel(id, name) {
+            labelModalTitle.textContent = 'Edit Label';
+            labelNameInput.value = name;
+            labelAction.name = 'edit_label';
+            labelId.value = id;
+            labelForm.action = "{% url 'edit_label' user.id 0 %}".replace('0', id);
+            labelModal.classList.remove('hidden');
+        }
+        
+        // When the user clicks the button to add, open the modal
+        addPriorityBtn.onclick = setupAddPriority;
+        addLabelBtn.onclick = setupAddLabel;
+        
+        // Set up event handlers for edit buttons
+        editPriorityBtns.forEach(function(btn) {
+            btn.onclick = function() {
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                setupEditPriority(id, name);
+            }
+        });
+        
+        editLabelBtns.forEach(function(btn) {
+            btn.onclick = function() {
+                const id = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name');
+                setupEditLabel(id, name);
+            }
+        });
+        
+        // When the user clicks on the close button, close the modal
+        closePriorityModal.onclick = function() {
+            priorityModal.classList.add('hidden');
+        }
+        
+        closeLabelModal.onclick = function() {
+            labelModal.classList.add('hidden');
+        }
+        
+        cancelPriorityBtn.onclick = function() {
+            priorityModal.classList.add('hidden');
+        }
+        
+        cancelLabelBtn.onclick = function() {
+            labelModal.classList.add('hidden');
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == priorityModal) {
+                priorityModal.classList.add('hidden');
+            }
+            if (event.target == labelModal) {
+                labelModal.classList.add('hidden');
+            }
+        }
+    });
+</script>
+
+{% endblock %}

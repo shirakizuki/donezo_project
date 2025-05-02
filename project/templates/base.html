@@ -2,11 +2,31 @@
 <html lang="en">
 <head>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'dist/styles.css' %}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts - Josefin Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <title>{% block title %}Donezo{% endblock %}</title>
 </head>
-<body>
-    {% block content%}
+<body class="font-josefin">
+    {% block content %}
+    
     {% endblock %}
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        once: false,
+        offset: 100,
+        duration: 1000,
+        easing: 'ease',
+      });
+    </script>
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

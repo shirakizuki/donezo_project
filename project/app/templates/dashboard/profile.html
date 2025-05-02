@@ -1,0 +1,15 @@
+{% load static %}
+<!-- Profile section content -->
+<h3 class="text-xl font-semibold mb-4">User Profile</h3>
+<div class="space-y-4">
+    <!-- Profile information will go here -->
+    <div class="flex items-center space-x-4 mb-6">
+        <div class="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-xl font-bold text-white">
+            {{ user.first_name|first }}{{ user.last_name|first }}
+        </div>
+        <div>
+            <h4 class="text-lg font-medium">{{ user.first_name }} {{ user.last_name }}</h4>
+            <p class="text-gray-600">{{ user.email }}</p>
+        </div>
+    </div>
+</div>

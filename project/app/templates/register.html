@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="relative min-h-screen w-full bg-white overflow-hidden">
+    <!-- SVG Background -->
+    <div class="absolute inset-0 top-10">
+        <svg width="1798" height="921" viewBox="0 0 1798 921" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="-13.0867" width="1950.97" height="910.811" rx="125" transform="rotate(21.8981 -13.0867 0)" fill="#F59D3A"/>
+        </svg>    
+    </div>
+    
+    <!-- Logo -->
+    <a href="{% url 'landing_page' %}" class="absolute top-2 left-2 sm:top-4 sm:left-4 z-20">
+        <img src="{% static 'image/donezo_logo.png' %}" alt="Donezo Logo" class="h-12 w-auto">
+    </a>
+
+    <!-- Login button -->
+    <div class="relative z-20">
+        <div class="absolute top-2 right-2 sm:top-4 sm:right-4">
+            <a href="{% url 'login' %}" class="bg-orange-400 text-white text-sm sm:text-base px-4 sm:px-6 py-1.5 sm:py-2 rounded-md hover:bg-orange-500 transition-colors">
+                LOGIN
+            </a>
+        </div>
+    </div>
+
+    <!-- Registration container -->
+    <div class="relative z-10 min-h-screen flex items-center drop-shadow-2xl justify-center p-4">
+        <div class="bg-white p-4 sm:p-6 md:p-8 rounded-lg w-full max-w-[90%] sm:max-w-md mx-auto">
+            <h1 class="text-xl sm:text-2xl font-semibold text-center mb-6 sm:mb-8">Create your account</h1>
+            <form method="POST" class="space-y-4 sm:space-y-6">
+                {% csrf_token %}
+                <div class="messages">
+                    {% if messages %}
+                    {% for message in messages %}
+                    <p class="text-red-500 text-sm mb-4">{{ message }}</p>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="space-y-3 sm:space-y-4">
+                    <!-- First Name field -->
+                    <div>
+                        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="text" name="first_name" id="first_name" required
+                                class="block w-full pl-8 sm:pl-10 pr-3 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md shadow-sm focus:ring-[#FFA500] focus:border-[#FFA500]"
+                                placeholder="Enter your first name">
+                        </div>
+                    </div>
+
+                    <!-- Last Name field -->
+                    <div>
+                        <label for="last_name" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="text" name="last_name" id="last_name" required
+                                class="block w-full pl-8 sm:pl-10 pr-3 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md shadow-sm focus:ring-[#FFA500] focus:border-[#FFA500]"
+                                placeholder="Enter your last name">
+                        </div>
+                    </div>
+
+                    <!-- Email field -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                                </svg>
+                            </div>
+                            <input type="email" name="email" id="email" required
+                                class="block w-full pl-8 sm:pl-10 pr-3 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md shadow-sm focus:ring-[#FFA500] focus:border-[#FFA500]"
+                                placeholder="Enter your email address">
+                        </div>
+                    </div>
+
+                    <!-- Password field -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="password" name="password" id="password" required
+                                class="block w-full pl-8 sm:pl-10 pr-3 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md shadow-sm focus:ring-[#FFA500] focus:border-[#FFA500]"
+                                placeholder="Enter your password">
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password field -->
+                    <div>
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
+                                <svg class="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input type="password" name="confirm_password" id="confirm_password" required
+                                class="block w-full pl-8 sm:pl-10 pr-3 py-1.5 sm:py-2 text-sm sm:text-base border border-gray-300 rounded-md shadow-sm focus:ring-[#FFA500] focus:border-[#FFA500]"
+                                placeholder="Confirm your password">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-[#FFA500] text-white text-sm sm:text-base py-1.5 sm:py-2 px-4 rounded-md hover:bg-[#FF9500] transition-colors mt-6">
+                    SIGN UP
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen w-full flex flex-col md:flex-row bg-orange-100">
+    <!-- Mobile Header with Menu Toggle -->
+    <div class="bg-white p-4 flex items-center justify-between md:hidden shadow-md">
+        <div class="flex items-center gap-2">
+            <img src="{% static 'image/donezo_logo.png' %}" alt="Donezo Logo" class="h-8 w-8">
+            <h1 class="text-xl font-bold">Donezo</h1>
+        </div>
+        <button id="mobile-menu-toggle" class="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="hidden md:flex flex-col h-screen md:w-16 lg:w-64 bg-white shadow-lg transition-all duration-300">
+        <!-- Logo (only visible on large screens) -->
+        <div class="p-4 hidden lg:flex justify-center items-center gap-3 lg:justify-start">
+            <img src="{% static 'image/donezo_logo.png' %}" alt="Donezo Logo" class="h-10 w-10">
+            <h1 class="text-xl font-bold">Donezo</h1>
+        </div>
+        
+        <!-- Navigation Links -->
+        <nav class="mt-8 flex-grow">
+            <ul class="space-y-2">
+                <!-- Today -->
+                <li class="px-2">
+                    <a href="{% url 'home' user.id 'today' %}" data-section="today" class="nav-link flex items-center px-3 py-3 rounded-md transition-colors group {% if section == 'today' %}bg-[#292220] text-white{% else %}text-gray-700 hover:bg-amber-50 hover:text-amber-500{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 {% if section != 'today' %}text-gray-500{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span class="hidden lg:inline ml-3 font-medium">Today</span>
+                    </a>
+                </li>
+                
+                <!-- Upcoming -->
+                <li class="px-2">
+                    <a href="{% url 'home' user.id 'upcoming' %}" data-section="upcoming" class="nav-link flex items-center px-3 py-3 rounded-md transition-colors group {% if section == 'upcoming' %}bg-[#292220] text-white{% else %}text-gray-700 hover:bg-amber-50 hover:text-amber-500{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 {% if section != 'upcoming' %}text-gray-500{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="hidden lg:inline ml-3 font-medium">Upcoming</span>
+                    </a>
+                </li>
+                
+                <!-- Filter and Links -->
+                <li class="px-2">
+                    <a href="{% url 'home' user.id 'filter' %}" data-section="filter" class="nav-link flex items-center px-3 py-3 rounded-md transition-colors group {% if section == 'filter' %}bg-[#292220] text-white{% else %}text-gray-700 hover:bg-amber-50 hover:text-amber-500{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 {% if section != 'filter' %}text-gray-500{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                        </svg>
+                        <span class="hidden lg:inline ml-3 font-medium">Filter & Links</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- User Actions Section at Bottom of Sidebar -->
+        <div class="mt-auto border-t border-gray-200 pt-2 pb-4">
+            <ul class="space-y-2">
+                <!-- Profile -->
+                <li class="px-2">
+                    <a href="{% url 'home' user.id 'profile' %}" data-section="profile" class="nav-link flex items-center px-3 py-3 rounded-md transition-colors group {% if section == 'profile' %}bg-[#292220] text-white{% else %}text-gray-700 hover:bg-amber-50 hover:text-amber-500{% endif %}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 {% if section != 'profile' %}text-gray-500{% endif %}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        <span class="hidden lg:inline ml-3 font-medium">Profile</span>
+                    </a>
+                </li>
+                
+                <!-- Logout -->
+                <li class="px-2">
+                    <a href="{% url 'logout' %}" class="nav-link flex items-center px-3 py-3 rounded-md text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors group">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        <span class="hidden lg:inline ml-3 font-medium">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="flex-1 p-4 md:p-6 overflow-y-auto">
+        <!-- Top bar content container -->
+        <h2 class="text-xl md:text-2xl font-bold mb-4 md:mb-6">Welcome back, <span class="highlight text-amber-600">{{ user.first_name }}</span></h2>
+        
+        <!-- Main content container -->
+        <div class="bg-white rounded-lg shadow-md p-4 md:p-6 min-h-[calc(100vh-8rem)]">
+            {% if section == 'today'%}
+                {% include "dashboard/today.html" %}
+            {% elif section == 'upcoming'%}
+                {% include "dashboard/upcoming.html" %}
+            {% elif section == 'filter'%}
+                {% include "dashboard/filter.html" %}
+            {% elif section == 'profile'%}
+                {% include "dashboard/profile.html" %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for mobile sidebar toggle -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        // Toggle sidebar visibility on mobile
+        mobileMenuToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('flex');
+        });
+        
+        // Hide sidebar when clicking on a link (mobile only)
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) { // 768px is the md breakpoint
+                    sidebar.classList.add('hidden');
+                    sidebar.classList.remove('flex');
+                }
+            });
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) { // 768px is the md breakpoint
+                sidebar.classList.remove('hidden');
+                sidebar.classList.add('flex');
+            } else {
+                sidebar.classList.add('hidden');
+                sidebar.classList.remove('flex');
+            }
+        });
+    });
+</script>
+{% endblock %}
